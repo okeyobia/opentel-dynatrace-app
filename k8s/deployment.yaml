@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-otel
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fastapi-otel
+  template:
+    metadata:
+      labels:
+        app: fastapi-otel
+    spec:
+      containers:
+        - name: app
+          image: your-dockerhub/fastapi-otel:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://otel-collector:4318
