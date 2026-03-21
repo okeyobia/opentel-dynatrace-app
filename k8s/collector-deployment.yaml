@@ -16,6 +16,9 @@ spec:
         - name: otel-collector
           image: otel/opentelemetry-collector-contrib:latest
           args: ["--config=/conf/config.yaml"]
+          envFrom:
+            - secretRef:
+                name: dynatrace-otlp
           volumeMounts:
             - name: config
               mountPath: /conf
