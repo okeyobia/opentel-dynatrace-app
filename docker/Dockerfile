@@ -1,5 +1,10 @@
 FROM python:3.11-slim
 
+# Install bash so kubectl exec sessions can use a full shell
+RUN apt-get update \
+	&& apt-get install --yes --no-install-recommends bash curl \
+	&& rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 COPY app/ .
 
