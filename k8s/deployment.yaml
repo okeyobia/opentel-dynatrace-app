@@ -13,8 +13,8 @@ spec:
         app: fastapi-otel
     spec:
       containers:
-        - name: app
-          image: okeyobia/fastapi-otel:v0.1.0
+        - name: fastapi
+          image: okeyobia/fastapi-otel:latest
           ports:
             - containerPort: 8000
           env:
