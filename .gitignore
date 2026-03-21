@@ -1,0 +1,4 @@
+# Keep plaintext Dynatrace secret out of source control
+k8s/dynatrace-otlp.secret.yaml
+# Local copy of the Sealed Secrets public certificate
+sealed-secrets.crt
