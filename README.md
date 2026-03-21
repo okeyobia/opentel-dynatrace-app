@@ -85,6 +85,20 @@ kubectl apply -f k8s/service.yaml
 1. Replace `YOUR_ENV` and `YOUR_API_TOKEN` in `k8s/otel-collector.yaml` with real values (store tokens in `Secret`s for production).
 2. Ensure outbound connectivity from the cluster to Dynatrace ingest endpoints.
 
+### Metrics and logs
+
+- The FastAPI app exposes Prometheus metrics at `/metrics` via `prometheus-fastapi-instrumentator`. The collector scrapes that endpoint and forwards metrics to Dynatrace through the OTLP HTTP exporter.
+- Standard Python logging is routed through OpenTelemetry and shipped to Dynatrace using the same collector. `kubectl logs` remains available for live troubleshooting while Dynatrace retains structured log records.
+- To verify metrics, search for the metric name `promhttp_metric_handler_requests_total` (or any FastAPI HTTP metric) in Dynatrace Metrics and filter by `service.name=fastapi-otel-app`.
+- To verify logs, open Dynatrace Logs, filter by the Kubernetes cluster name and the `service.name` attribute, and confirm entries such as "Root handler invoked" or "Slow endpoint completed".
+
+### Build SLO dashboards in Dynatrace
+
+1. Navigate to **Dashboards & notebooks → + Create dashboard** and add the **SLO** tile.
+2. Create a new SLO based on the FastAPI service by selecting **Service-level (builtin:service.errors.total.rate)** as the metric and scoping it to `service.name=fastapi-otel-app`.
+3. Add supporting charts that plot request latency percentiles (`builtin:service.response.time`) and Prometheus counters exposed through OTLP.
+4. Save the dashboard and pin it for ongoing visibility; Argo CD rollouts plus the OTEL collector will keep the data set current.
+
 ## Argo CD Automation
 
 `argocd/application.yaml` defines a GitOps workflow that watches this repo and applies the manifests under `k8s/`. To use it:
@@ -112,5 +126,5 @@ Argo CD will continuously sync, self-heal, and prune Kubernetes resources in the
 ## Next Steps
 
 - Secure sensitive values with Kubernetes Secrets and sealed-secrets / External Secrets.
-- Add metrics and logs pipelines via OTEL Collector.
-- Add CI to build and push the container image automatically.
+- Build SLO dashboards and alerting policies in Dynatrace backed by the exported metrics and logs.
+- Extend CI to run tests and security scanning in addition to image builds.
