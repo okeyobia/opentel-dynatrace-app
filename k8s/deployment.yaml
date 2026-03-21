@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: fastapi
-          image: okeyobia/fastapi-otel:e04678fe37bb20251f84fdcf41ebfd63be3fa602
+          image: okeyobia/fastapi-otel:7cbe8aeb1dae56d2ae838554b460c71f1e122538
           ports:
             - containerPort: 8000
           env:
