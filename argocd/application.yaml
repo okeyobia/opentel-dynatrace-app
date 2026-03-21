@@ -7,7 +7,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/okeyobia/opentel-dynatrace-app/fastapi-otel
+    repoURL: https://github.com/okeyobia/opentel-dynatrace-app
     targetRevision: HEAD
     path: k8s
 
